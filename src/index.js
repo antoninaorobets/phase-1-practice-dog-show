@@ -12,15 +12,14 @@ function getDogsIngo() {
 }
 
 
-function Dog(data) {
+function Dog(id ,name,breed,sex) {
     this.id = id
-    this.name = data.name
-    this.breed = data.bread
-    this.sex = data.sex
+    this.name = name
+    this.breed = breed
+    this.sex = sex
 }
 
 function displayAllDogs(data) {
-
     const table = document.querySelector('#table-body')
     table.innerHTML = ''
     data.forEach(element => {
@@ -40,7 +39,6 @@ function displayAllDogs(data) {
         line.append(td)
         table.append(line)
     });
-
 }
 
 function getDogToEditForm(event) {
@@ -60,12 +58,11 @@ function getDogToEditForm(event) {
 
 function updateDdogsDb(event) {
     event.preventDefault()
-    console.log(event)
- //  const form = document.querySelector('#dog-form')
-    const dogId = event.target.dataset.dogId
-    const name = event.target.querySelector('input[name="name"]').value
-    const breed = event.target.querySelector('input[name="breed"]').value
-    const sex = event.target.querySelector('input[name="sex"]').value
+    const updatedDog = new Dog(
+        event.target.dataset.dogId, 
+        event.target.querySelector('input[name="name"]').value,
+        event.target.querySelector('input[name="breed"]').value,
+        event.target.querySelector('input[name="sex"]').value)
 
     fetch(dbURL + `/${dogId}`, {
         method: 'PATCH',
@@ -73,12 +70,7 @@ function updateDdogsDb(event) {
             "Content-Type": "application/json",
             Accept: "application/json",
         },
-        body: JSON.stringify({
-            id: dogId,
-            name: name,
-            breed: breed,
-            sex: sex
-        }),
+        body: JSON.stringify(updatedDog)
     })
         .then((response) => response.json())
         .then()
