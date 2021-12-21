@@ -8,13 +8,13 @@
     },
     {
       "id": 2,
-      "name": "Snicker2",
+      "name": "Pupy",
       "breed": "Dachshund",
-      "sex": "female"
+      "sex": "male"
     },
     {
       "id": 3,
-      "name": "Snickers3",
+      "name": "Snick",
       "breed": "Dachshund",
       "sex": "female"
     },

@@ -1,11 +1,16 @@
 const dbURL = "http://localhost:3000/dogs"
 
 
-document.addEventListener('DOMContentLoaded', () => { 
-    fetch(dbURL).then(resp=>resp.json()).then(displayAllDogs).catch(error => console.error(error))
+document.addEventListener('DOMContentLoaded', () => {
+    getDogsIngo();
     const form = document.querySelector('#dog-form')
     form.addEventListener('submit', updateDdogsDb)
 })
+
+function getDogsIngo() {
+    fetch(dbURL).then(resp => resp.json()).then(displayAllDogs).catch(error => console.error(error))
+}
+
 
 function Dog(data) {
     this.id = id
@@ -14,29 +19,31 @@ function Dog(data) {
     this.sex = data.sex
 }
 
-function displayAllDogs(data){
+function displayAllDogs(data) {
+
     const table = document.querySelector('#table-body')
+    table.innerHTML = ''
     data.forEach(element => {
-        const line= document.createElement('tr')
+        const line = document.createElement('tr')
         line.dataset.dogId = element.id
         const td = document.createElement('td')
         const editButton = document.createElement('button')
         editButton.textContent = "Edit"
         editButton.dataset.id = element.id
         editButton.addEventListener('click', getDogToEditForm)
-        td.appendChild(editButton)  
-  
-        line.innerHTML = 
-        `<td name="name">${element.name}</td>` +
-        `<td name="breed">${element.breed}</td>`+
-        `<td name="sex">${element.sex}</td>`
+        td.appendChild(editButton)
+
+        line.innerHTML =
+            `<td name="name">${element.name}</td>` +
+            `<td name="breed">${element.breed}</td>` +
+            `<td name="sex">${element.sex}</td>`
         line.append(td)
         table.append(line)
     });
-    
+
 }
 
-function getDogToEditForm(event){  
+function getDogToEditForm(event) {
 
     const dogId = event.target.dataset.id
     const form = document.querySelector('#dog-form')
@@ -49,35 +56,34 @@ function getDogToEditForm(event){
     breed.value = line.querySelector('td[name="breed"]').textContent
     const sex = form.querySelector('input[name="sex"]')
     sex.value = line.querySelector('td[name="sex"]').textContent
- }
+}
 
+function updateDdogsDb(event) {
+    event.preventDefault()
+    console.log(event)
+ //  const form = document.querySelector('#dog-form')
+    const dogId = event.target.dataset.dogId
+    const name = event.target.querySelector('input[name="name"]').value
+    const breed = event.target.querySelector('input[name="breed"]').value
+    const sex = event.target.querySelector('input[name="sex"]').value
 
- function updateDdogsDb(event) {
-        event.preventDefault()
-        console.log( event)
-        const form = document.querySelector('#dog-form')
-        const dogId = form.dataset.dogId
-        const name = event.target.querySelector('input[name="name"]').value
-        const breed = event.target.querySelector('input[name="breed"]').value
-        const sex = event.target.querySelector('input[name="sex"]').value
-
-            fetch(dbURL+ `/${dogId}`, {
-                method: 'PATCH',
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    id: dogId,
-                    name: name,
-                    breed: breed,
-                    sex: sex
-                }),
-            })
-            .then((response) => response.json())
-            .then((object) =>console.log(object))
-            .catch( (error)=>console.error(error.message))
-    form.reset()
-    form.dataset.dogId = ''
-
+    fetch(dbURL + `/${dogId}`, {
+        method: 'PATCH',
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            id: dogId,
+            name: name,
+            breed: breed,
+            sex: sex
+        }),
+    })
+        .then((response) => response.json())
+        .then()
+        .catch((error) => console.error(error.message))
+    getDogsIngo()
+    event.target.reset()
+    event.target.dataset.dogId = ''
 }
